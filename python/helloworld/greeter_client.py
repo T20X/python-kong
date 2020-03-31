@@ -26,7 +26,7 @@ def run():
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be
     # used in circumstances in which the with statement does not fit the needs
     # of the code.
-    with grpc.insecure_channel('172.18.0.1:9080') as channel:
+    with grpc.insecure_channel('192.168.56.6:9080') as channel:
         a = datetime.datetime.now()
         N=10000
         for i in range(N):
