@@ -40,7 +40,7 @@ class Greeter(helloworld_pb2_grpc.GreeterServicer):
     def SayManyHello2(self, request, context):
         N=0
         for req in request:
-            time.sleep(1)
+            #time.sleep(1)
             print("read from client -> ", req.name)
             N=N+1
         return helloworld_pb2.HelloReply(message='Hi from SayManyHello2' + str(N))
