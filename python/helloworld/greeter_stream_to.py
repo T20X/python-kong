@@ -21,20 +21,40 @@ import grpc
 import helloworld_pb2
 import helloworld_pb2_grpc
 import datetime 
+import time
+
+
+N=100
+def gen():
+    for i in range(N):
+        time.sleep(1)
+        yield helloworld_pb2.HelloRequest(name=str(i))
+
+def status(s):
+    if s == grpc.ChannelConnectivity.CONNECTING:
+        print("CONNECTING")
+    elif s == grpc.ChannelConnectivity.READY:
+        print("READY")
+    elif s == grpc.ChannelConnectivity.IDLE:
+        print("IDLE")
+    elif s == grpc.ChannelConnectivity.TRANSIENT_FAILURE:
+        print("TRANSIENT_FAILURE")
+    elif s == grpc.ChannelConnectivity.SHUTDOWN: 
+        print("SHUTDOWN")
 
 def run():
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be
     # used in circumstances in which the with statement does not fit the needs
     # of the code.
-    with grpc.insecure_channel('172.18.0.1:9080') as channel:
+    with grpc.insecure_channel('192.168.56.7:9080', options=[
+        ('grpc.keepalive_time_ms', 10000),
+        ('grpc.keepalive_timeout_ms', 5000),
+        ('grpc.keepalive_permit_without_calls', True)
+      ]) as channel:
+        channel.subscribe(status)
         a = datetime.datetime.now()
-        N=100
         stub = helloworld_pb2_grpc.GreeterStub(channel)
-        data=[]
-        for i in range(N):
-            data.append(helloworld_pb2.HelloRequest(name=str(i)))
-
-        response=stub.SayManyHello2(data.__iter__())
+        response=stub.SayManyHello2(gen())
         print("Greeter client received: " + response.message)
 
         b = datetime.datetime.now()
