@@ -31,7 +31,7 @@ def run():
         N=10000
         for i in range(N):
             stub = helloworld_pb2_grpc.GreeterStub(channel)
-            response = stub.SayHello(helloworld_pb2.HelloRequest(name='you tell me '))
+            response = stub.SayHello.with_call(helloworld_pb2.HelloRequest(), metadata = (('authorization', 'LDAP SHViZXJ0IEouIEZhcm5zd29ydGgsb3U9cGVvcGxlOnByb2Zlc3Nvcg=='), ))
         b = datetime.datetime.now()
         print("Perf is:", ((b-a).total_seconds()/N)*1000, " ms per call")
 

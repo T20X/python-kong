@@ -23,6 +23,7 @@ import helloworld_pb2
 import helloworld_pb2_grpc
 
 
+
 class Greeter(helloworld_pb2_grpc.GreeterServicer):
 
     def SayHello(self, request, context):
@@ -39,6 +40,10 @@ class Greeter(helloworld_pb2_grpc.GreeterServicer):
 
     def SayManyHello2(self, request, context):
         N=0
+        while context.is_active(): 
+            pass
+
+        print("DISCONNECTED") 
         for req in request:
             #time.sleep(1)
             print("read from client -> ", req.name)
@@ -51,7 +56,7 @@ class Greeter(helloworld_pb2_grpc.GreeterServicer):
 
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
     helloworld_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
     server.add_insecure_port('[::]:50051')
     server.start()

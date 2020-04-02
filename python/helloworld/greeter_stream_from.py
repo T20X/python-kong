@@ -34,7 +34,7 @@ def run():
         a = datetime.datetime.now()
         N=0
         stub = helloworld_pb2_grpc.GreeterStub(channel)
-        for response in stub.SayManyHello(helloworld_pb2.StreamRequest(N=100)):
+        for response in stub.SayManyHello(helloworld_pb2.StreamRequest(N=100), metadata = (('Authorization', 'LDAP SHViZXJ0IEouIEZhcm5zd29ydGgsb3U9cGVvcGxlOnByb2Zlc3Nvcg=='), )):
             print("Greeter client received: " + response.message)
             N=N+1 
 
